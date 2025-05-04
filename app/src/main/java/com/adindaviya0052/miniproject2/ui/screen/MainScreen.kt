@@ -124,7 +124,7 @@ fun ListItem(film: Film, onClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = film.jenis,
+            text = film.kategori,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
