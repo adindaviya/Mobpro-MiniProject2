@@ -21,4 +21,7 @@ interface FilmDao {
 
     @Query("SELECT * FROM film WHERE id = :id")
     suspend fun getFilmById(id:Long): Film?
+
+    @Query("DELETE FROM film WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }
