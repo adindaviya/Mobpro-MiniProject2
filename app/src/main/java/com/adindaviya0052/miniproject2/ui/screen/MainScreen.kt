@@ -37,6 +37,9 @@ import com.adindaviya0052.miniproject2.R
 import com.adindaviya0052.miniproject2.model.Film
 import com.adindaviya0052.miniproject2.navigation.Screen
 import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,7 +135,16 @@ fun ListItem(film: Film, onClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold
         )
-        Text(text = film.tanggal)
+        Text(text = convertMillisToDateString(film.tanggal))
+    }
+}
+
+fun convertMillisToDateString(millis: Long?): String {
+    return if (millis != null) {
+        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
+        formatter.format(Date(millis))
+    } else {
+        "-"
     }
 }
 

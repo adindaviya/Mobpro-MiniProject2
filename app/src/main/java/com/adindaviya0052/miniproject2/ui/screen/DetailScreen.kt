@@ -50,6 +50,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.adindaviya0052.miniproject2.R
@@ -63,6 +64,8 @@ const val KEY_ID_FILM = "idDaftarFilm"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavHostController, id: Long? = null) {
+    val viewModel: MainViewModel= viewModel()
+
     var judul by remember { mutableStateOf("") }
     var review by remember { mutableStateOf("") }
     var kategori by remember { mutableStateOf("") }
@@ -72,6 +75,16 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
     val kategoriList = listOf("Drama Cina", "Drama Korea", "Film Animasi",
         "Film Hollywood", "Film Indonesia")
     val statusList = listOf("Belum ditonton", "Sedang ditonton", "Selesai ditonton")
+
+    LaunchedEffect(Unit) {
+        if (id == null) return@LaunchedEffect
+        val data = viewModel.getCatatan(id) ?: return@LaunchedEffect
+        judul = data.judul
+        review = data.review
+        kategori = data.kategori
+        status = data.status
+        selectedDate = data.tanggal
+    }
 
     Scaffold(
         topBar = {

@@ -6,5 +6,5 @@ data class Film(
     val review: String,
     val kategori: String,
     val status: String,
-    val tanggal: String
+    val tanggal: Long?
 )
