@@ -185,12 +185,14 @@ fun FormFilm(
             value = review,
             onValueChange = { onReviewChange(it) },
             label = { Text(text = stringResource(R.string.review)) },
-            singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next
             ),
-            modifier = Modifier.fillMaxWidth()
+            maxLines = 5,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
         )
 
         // kategori
