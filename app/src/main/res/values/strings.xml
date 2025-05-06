@@ -6,5 +6,6 @@
     <string name="belum_bisa">Belum bisa tambah daftar film</string>
     <string name="judul">Judul</string>
     <string name="review">Review Pribadi</string>
+    <string name="kategori">Kategori</string>
     <string name="status">Status</string>
 </resources>

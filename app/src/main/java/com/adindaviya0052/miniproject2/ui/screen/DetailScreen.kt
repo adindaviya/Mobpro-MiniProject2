@@ -12,7 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -39,8 +42,11 @@ import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
 fun DetailScreen() {
     var judul by remember { mutableStateOf("") }
     var review by remember { mutableStateOf("") }
+    var kategori by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("") }
 
+    val kategoriList = listOf("Drama Cina", "Drama Korea", "Film Animasi",
+        "Film Hollywood", "Film Indonesia")
     val statusList = listOf("Belum ditonton", "Sedang ditonton", "Selesai ditonton")
 
     Scaffold(
@@ -61,19 +67,25 @@ fun DetailScreen() {
             onTitleChange = { judul = it },
             review = review,
             onReviewChange = { review = it },
+            kategori = kategori,
+            onKategoriChange = { kategori = it },
             status = status,
             onStatusChange = { status = it },
+            kategoriList = kategoriList,
             statusList = statusList,
             modifier = Modifier.padding(padding)
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormFilm(
     title: String, onTitleChange: (String) -> Unit,
     review: String, onReviewChange: (String) -> Unit,
+    kategori: String, onKategoriChange: (String) -> Unit,
     status: String, onStatusChange: (String) -> Unit,
+    kategoriList: List<String>,
     statusList: List<String>,
     modifier: Modifier
 ){
@@ -107,6 +119,40 @@ fun FormFilm(
             modifier = Modifier.fillMaxWidth()
         )
 
+        // kategori
+        var expanded by remember { mutableStateOf(false) }
+
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
+            OutlinedTextField(
+                readOnly = true,
+                value = kategori,
+                onValueChange = {},
+                label = { Text(text = stringResource(R.string.kategori)) },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                kategoriList.forEach { film ->
+                    DropdownMenuItem(
+                        text = { Text(text = film) },
+                        onClick = {
+                            onKategoriChange(film)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+        
         // status
         Card(
             modifier = Modifier.fillMaxWidth(),
