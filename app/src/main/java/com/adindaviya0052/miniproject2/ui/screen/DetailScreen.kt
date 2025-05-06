@@ -78,6 +78,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
     var kategori by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("Sedang ditonton") }
     var selectedDate by remember { mutableStateOf<Long?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
     val kategoriList = listOf("Drama Cina", "Drama Korea", "Film Animasi",
         "Film Hollywood", "Film Indonesia")
@@ -136,8 +137,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
 
                     if (id !=null) {
                         DeleteAction {
-                            viewModel.delete(id)
-                            navController.popBackStack()
+                            showDialog = true
                         }
                     }
                 }
@@ -159,6 +159,14 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
             onDateChange = { selectedDate = it },
             modifier = Modifier.padding(padding)
         )
+        if (id != null && showDialog) {
+            DisplayAlertDialog(
+                onDismissRequest = { showDialog = false }) {
+                showDialog = false
+                viewModel.delete(id)
+                navController.popBackStack()
+            }
+        }
     }
 }
 

@@ -14,4 +14,7 @@
     <string name="invalid">Judul, Review Pribadi, dan Kategori tidak boleh kosong.</string>
     <string name="lainnya">Opsi lainnya</string>
     <string name="hapus">Hapus Daftar Film</string>
+    <string name="pesan_hapus">Hapus daftar film ini?</string>
+    <string name="tombol_hapus">Hapus</string>
+    <string name="tombol_batal">Batal</string>
 </resources>
