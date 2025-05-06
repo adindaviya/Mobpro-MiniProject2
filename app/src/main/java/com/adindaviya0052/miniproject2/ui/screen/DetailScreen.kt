@@ -1,6 +1,7 @@
 package com.adindaviya0052.miniproject2.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -55,6 +57,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.adindaviya0052.miniproject2.R
 import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
+import com.adindaviya0052.miniproject2.util.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -64,12 +67,14 @@ const val KEY_ID_FILM = "idDaftarFilm"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavHostController, id: Long? = null) {
-    val viewModel: MainViewModel= viewModel()
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: DetailViewModel = viewModel(factory = factory)
 
     var judul by remember { mutableStateOf("") }
     var review by remember { mutableStateOf("") }
     var kategori by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("") }
+    var status by remember { mutableStateOf("Sedang ditonton") }
     var selectedDate by remember { mutableStateOf<Long?>(null) }
 
     val kategoriList = listOf("Drama Cina", "Drama Korea", "Film Animasi",
@@ -109,7 +114,15 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = { navController.popBackStack()}) {
+                    IconButton(onClick = {
+                        if (judul == "" || review == "" || kategori == "") {
+                            Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                            return@IconButton
+                        }
+                        if (id == null) {
+                            viewModel.insert(judul, review, kategori, status, selectedDate)
+                        }
+                        navController.popBackStack()}) {
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = stringResource(R.string.simpan),
@@ -174,7 +187,7 @@ fun FormFilm(
             label = { Text(text = stringResource(R.string.review)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
+                capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next
             ),
             modifier = Modifier.fillMaxWidth()
