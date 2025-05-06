@@ -195,7 +195,9 @@ fun FormFilm(
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
 
             ExposedDropdownMenu(
