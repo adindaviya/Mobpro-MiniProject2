@@ -78,7 +78,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
 
     LaunchedEffect(Unit) {
         if (id == null) return@LaunchedEffect
-        val data = viewModel.getCatatan(id) ?: return@LaunchedEffect
+        val data = viewModel.getFilm(id) ?: return@LaunchedEffect
         judul = data.judul
         review = data.review
         kategori = data.kategori
