@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
@@ -48,6 +50,8 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.adindaviya0052.miniproject2.R
 import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
 import java.text.SimpleDateFormat
@@ -56,7 +60,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen() {
+fun DetailScreen(navController: NavHostController) {
     var judul by remember { mutableStateOf("") }
     var review by remember { mutableStateOf("") }
     var kategori by remember { mutableStateOf("") }
@@ -70,13 +74,31 @@ fun DetailScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.kembali),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                },
                 title = {
                     Text(text = stringResource(id = R.string.tambah_film))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                actions = {
+                    IconButton(onClick = { navController.popBackStack()}) {
+                        Icon(
+                            imageVector = Icons.Outlined.Check,
+                            contentDescription = stringResource(R.string.simpan),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
         },
     ) { padding ->
@@ -272,6 +294,6 @@ fun convertMillisToDate(millis: Long): String {
 @Composable
 fun DetailScreenPreview(){
     MiniProject2Theme {
-        DetailScreen()
+        DetailScreen(rememberNavController())
     }
 }
