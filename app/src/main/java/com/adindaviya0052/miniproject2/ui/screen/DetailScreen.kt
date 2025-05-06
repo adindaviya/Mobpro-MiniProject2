@@ -58,9 +58,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+const val KEY_ID_FILM = "idDaftarFilm"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavHostController) {
+fun DetailScreen(navController: NavHostController, id: Long? = null) {
     var judul by remember { mutableStateOf("") }
     var review by remember { mutableStateOf("") }
     var kategori by remember { mutableStateOf("") }
@@ -84,7 +86,10 @@ fun DetailScreen(navController: NavHostController) {
                     }
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.tambah_film))
+                    if (id == null)
+                        Text(text = stringResource(id = R.string.tambah_film))
+                    else
+                        Text(text = stringResource(R.string.edit_film))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
