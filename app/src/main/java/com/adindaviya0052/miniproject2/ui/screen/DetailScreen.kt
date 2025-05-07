@@ -118,9 +118,21 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                 ),
                 actions = {
                     IconButton(onClick = {
-                        if (judul == "" || review == "" || kategori == "") {
-                            Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
-                            return@IconButton
+                        val isFormEmpty = judul.isBlank() || review.isBlank() || kategori.isBlank()
+
+                        if (status == "Selesai ditonton") {
+                            if (isFormEmpty) {
+                                Toast.makeText(context, R.string.data_kosong, Toast.LENGTH_LONG).show()
+                                return@IconButton
+                            } else if (selectedDate == null) {
+                                Toast.makeText(context, R.string.invalid_tanggal, Toast.LENGTH_LONG).show()
+                                return@IconButton
+                            }
+                        } else {
+                            if (isFormEmpty) {
+                                Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                                return@IconButton
+                            }
                         }
                         if (id == null) {
                             viewModel.insert(judul, review, kategori, status, selectedDate)
@@ -276,7 +288,8 @@ fun FormFilm(
         // tanggal
         DatePickerDocked(
             selectedDate = selectedDate,
-            onDateChange = onDateChange
+            onDateChange = onDateChange,
+            enabled = (status == "Selesai ditonton")
         )
     }
 }
@@ -285,7 +298,8 @@ fun FormFilm(
 @Composable
 fun DatePickerDocked(
     selectedDate: Long?,
-    onDateChange: (Long) -> Unit
+    onDateChange: (Long) -> Unit,
+    enabled: Boolean
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = selectedDate)
@@ -300,9 +314,12 @@ fun DatePickerDocked(
             onValueChange = {},
             label = { Text("Tanggal Selesai Ditonton") },
             readOnly = true,
+            enabled = enabled,
             trailingIcon = {
-                IconButton(onClick = { showDatePicker = !showDatePicker }) {
-                    Icon(imageVector = Icons.Default.DateRange, contentDescription = "Select date")
+                IconButton(
+                    onClick = { if (enabled) showDatePicker = !showDatePicker },
+                    enabled = enabled) {
+                    Icon(imageVector = Icons.Default.DateRange, contentDescription = "Pilih tanggal")
                 }
             },
             modifier = Modifier
@@ -310,7 +327,7 @@ fun DatePickerDocked(
                 .height(64.dp)
         )
 
-        if (showDatePicker) {
+        if (enabled && showDatePicker) {
             Popup(
                 onDismissRequest = { showDatePicker = false },
                 alignment = Alignment.TopStart

@@ -19,4 +19,6 @@
     <string name="tombol_batal">Batal</string>
     <string name="list">Tampilan list</string>
     <string name="grid">Tampilan grid</string>
+    <string name="invalid_tanggal">Anda telah selesai menonton, Silakan isi tanggal!</string>
+    <string name="data_kosong">Data Daftar Film tidak boleh kosong.</string>
 </resources>
