@@ -25,4 +25,5 @@
     <string name="undo_button">Undo</string>
     <string name="recycle_bin">Recycle Bin</string>
     <string name="sampah">Sampah</string>
+    <string name="recycle_toast">Dipindahkan ke Recycle Bin</string>
 </resources>

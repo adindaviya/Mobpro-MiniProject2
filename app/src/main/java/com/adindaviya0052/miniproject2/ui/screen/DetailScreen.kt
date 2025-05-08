@@ -80,7 +80,6 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
     var kategori by remember { mutableStateOf("") }
     var status by remember { mutableStateOf("Sedang ditonton") }
     var selectedDate by remember { mutableStateOf<Long?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
 
     val kategoriList = listOf("Drama Cina", "Drama Korea", "Film Animasi",
         "Film Hollywood", "Film Indonesia")
@@ -151,18 +150,11 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                     }
 
                     if (id != null) {
-                        DeleteAction { showDialog = true }
-
-                        if (showDialog) {
-                            DisplayAlertDialog(
-                                showDialog = true,
-                                onDismissRequest = { showDialog = false },
-                                onConfirmation = {
-                                    showDialog = false
-                                    viewModel.softDelete(id)
-                                    navController.navigate(Screen.Home.route)
-                                }
-                            )
+                        DeleteAction {
+                            viewModel.softDelete(id)
+                            Toast.makeText(context, context.getString(R.string.recycle_toast),
+                                Toast.LENGTH_SHORT).show()
+                            navController.navigate(Screen.Home.route)
                         }
                     }
                 }

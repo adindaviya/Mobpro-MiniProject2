@@ -4,21 +4,19 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -38,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.adindaviya0052.miniproject2.R
+import com.adindaviya0052.miniproject2.navigation.Screen
 import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
 import com.adindaviya0052.miniproject2.util.ViewModelFactory
 
@@ -66,12 +65,12 @@ fun RecycleScreen(navController: NavHostController) {
             )
         },
     ){ innerPadding ->
-        RecycleContent(Modifier.padding(innerPadding))
+        RecycleContent(navController, Modifier.padding(innerPadding))
     }
 }
 
 @Composable
-fun RecycleContent(modifier: Modifier = Modifier) {
+fun RecycleContent(navController: NavHostController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
@@ -99,34 +98,22 @@ fun RecycleContent(modifier: Modifier = Modifier) {
                     id = it.id
                     showDialog = true
                 }
+                HorizontalDivider()
             }
         }
         if (showDialog)
-            AlertDialog(
-                text = { Text(text = stringResource(R.string.dialog_recycle)) },
-                confirmButton = {
-                    Row {
-                        TextButton(onClick = {
-                            showDialog = false
-                            viewModel.undoDelete(id)
-                        }) {
-                            Text(text = stringResource(R.string.undo_button))
-                        }
-                        TextButton(onClick = {
-                            showDialog = false
-                            viewModel.deletePermanent(id)
-                        }) {
-                            Text(text = stringResource(R.string.tombol_hapus))
-                        }
-
-                    }
+            DisplayAlertDialog(
+                openDialog = true,
+                onDismissRequest = { showDialog = false },
+                onUndo = {
+                    showDialog = false
+                    viewModel.undoDelete(id)
+                    navController.navigate(Screen.Recycle.route)
                 },
-                dismissButton = {
-                    TextButton(onClick = {showDialog = false }) {
-                        Text(text = stringResource(R.string.tombol_batal))
-                    }
-                },
-                onDismissRequest = { showDialog = false}
+                onDelete = {
+                    showDialog = false
+                    viewModel.deletePermanent(id)
+                }
             )
     }
 }

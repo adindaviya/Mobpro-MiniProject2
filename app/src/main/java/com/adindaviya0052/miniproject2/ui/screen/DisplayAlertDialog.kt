@@ -1,6 +1,7 @@
 package com.adindaviya0052.miniproject2.ui.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -12,24 +13,30 @@ import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
 
 @Composable
 fun DisplayAlertDialog(
-    showDialog: Boolean,
+    openDialog: Boolean,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit
+    onUndo: () -> Unit,
+    onDelete: () -> Unit
 ) {
-    if (showDialog) {
+    if (openDialog) {
         AlertDialog(
-            text = { Text(text = stringResource(R.string.pesan_hapus)) },
+            text = { Text(text = stringResource(R.string.dialog_recycle)) },
             confirmButton = {
-                TextButton(onClick = { onConfirmation() }) {
-                    Text(text = stringResource(R.string.tombol_hapus))
+                Row {
+                    TextButton(onClick = { onUndo() }) {
+                        Text(text = stringResource(R.string.undo_button))
+                    }
+                    TextButton(onClick = { onDelete() }) {
+                        Text(text = stringResource(R.string.tombol_hapus))
+                    }
                 }
             },
             dismissButton = {
-                TextButton(onClick = { onDismissRequest() }) {
+                TextButton(onClick = onDismissRequest) {
                     Text(text = stringResource(R.string.tombol_batal))
                 }
             },
-            onDismissRequest = { onDismissRequest() }
+            onDismissRequest = onDismissRequest
         )
     }
 }
@@ -41,9 +48,10 @@ fun DisplayAlertDialog(
 fun DialogPreview(){
     MiniProject2Theme {
         DisplayAlertDialog(
-            showDialog = true,
+            openDialog = true,
             onDismissRequest = {},
-            onConfirmation = {}
+            onUndo = {},
+            onDelete = {}
         )
     }
 }
