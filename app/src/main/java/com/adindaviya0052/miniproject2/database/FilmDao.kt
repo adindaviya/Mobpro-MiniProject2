@@ -16,7 +16,7 @@ interface FilmDao {
     @Update
     suspend fun update(film: Film)
 
-    @Query("SELECT * FROM film ORDER BY tanggal DESC")
+    @Query("SELECT * FROM film WHERE isDeleted = 0 ORDER BY judul ASC")
     fun getFilm(): Flow<List<Film>>
 
     @Query("SELECT * FROM film WHERE id = :id")
@@ -24,4 +24,13 @@ interface FilmDao {
 
     @Query("DELETE FROM film WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("UPDATE film SET isDeleted = 1 WHERE id = :id")
+    suspend fun softDeleteById(id: Long)
+
+    @Query("UPDATE film SET isDeleted = 0 WHERE id = :id")
+    suspend fun undoDeleteById(id: Long)
+
+    @Query("SELECT * FROM film WHERE isDeleted = 1 ORDER BY judul ASC")
+    fun getDeletedBook(): Flow<List<Film>>
 }

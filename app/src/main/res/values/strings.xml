@@ -21,4 +21,8 @@
     <string name="grid">Tampilan grid</string>
     <string name="invalid_tanggal">Anda telah selesai menonton, Silakan isi tanggal!</string>
     <string name="data_kosong">Data Daftar Film tidak boleh kosong.</string>
+    <string name="dialog_recycle">Pulihkan atau Hapus Daftar Film Ini</string>
+    <string name="undo_button">Undo</string>
+    <string name="recycle_bin">Recycle Bin</string>
+    <string name="sampah">Sampah</string>
 </resources>

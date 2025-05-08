@@ -11,5 +11,6 @@ data class Film(
     val review: String,
     val kategori: String,
     val status: String,
-    val tanggal: Long?
+    val tanggal: Long?,
+    val isDeleted: Boolean = false
 )

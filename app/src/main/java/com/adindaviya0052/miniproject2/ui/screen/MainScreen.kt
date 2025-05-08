@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DividerDefaults
@@ -92,6 +93,13 @@ fun MainScreen(navController: NavHostController) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                    IconButton(onClick = {navController.navigate(Screen.Recycle.route)}) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = stringResource(R.string.sampah),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             )
         },
@@ -119,8 +127,9 @@ fun ScreenContent(showList: Boolean, modifier: Modifier, navController: NavHostC
     val factory = ViewModelFactory(context)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
+    val filteredData = data.filter { !it.isDeleted }
 
-    if (data.isEmpty()) {
+    if (filteredData.isEmpty()) {
         Column (
             modifier = modifier.fillMaxSize().padding(16.dp),
             verticalArrangement = Arrangement.Center,

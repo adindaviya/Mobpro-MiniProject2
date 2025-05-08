@@ -4,9 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.adindaviya0052.miniproject2.model.Film
 
-@Database(entities = [Film::class], version = 1, exportSchema = false)
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE film ADD COLUMN isDeleted INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
+@Database(entities = [Film::class], version = 2, exportSchema = false)
 abstract class FilmDb : RoomDatabase() {
 
     abstract val dao: FilmDao
@@ -25,7 +33,9 @@ abstract class FilmDb : RoomDatabase() {
                         context.applicationContext,
                         FilmDb:: class.java,
                         "film.db"
-                    ).build()
+                    )
+                        .addMigrations(MIGRATION_1_2)
+                        .build()
                     INSTANCE = instance
                 }
                 return instance

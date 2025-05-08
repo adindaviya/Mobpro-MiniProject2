@@ -43,6 +43,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.adindaviya0052.miniproject2.R
+import com.adindaviya0052.miniproject2.navigation.Screen
 import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
 import com.adindaviya0052.miniproject2.util.ViewModelFactory
 import java.text.SimpleDateFormat
@@ -139,7 +141,8 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                         } else {
                             viewModel.update(id, judul, review, kategori, status, selectedDate)
                         }
-                        navController.popBackStack()}) {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = stringResource(R.string.simpan),
@@ -147,15 +150,25 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                         )
                     }
 
-                    if (id !=null) {
-                        DeleteAction {
-                            showDialog = true
+                    if (id != null) {
+                        DeleteAction { showDialog = true }
+
+                        if (showDialog) {
+                            DisplayAlertDialog(
+                                showDialog = true,
+                                onDismissRequest = { showDialog = false },
+                                onConfirmation = {
+                                    showDialog = false
+                                    viewModel.softDelete(id)
+                                    navController.navigate(Screen.Home.route)
+                                }
+                            )
                         }
                     }
                 }
             )
-        },
-    ) { padding ->
+        }
+        ) { padding ->
         FormFilm(
             title = judul,
             onTitleChange = { judul = it },
@@ -171,16 +184,42 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
             onDateChange = { selectedDate = it },
             modifier = Modifier.padding(padding)
         )
-        if (id != null && showDialog) {
-            DisplayAlertDialog(
-                onDismissRequest = { showDialog = false }) {
-                showDialog = false
-                viewModel.delete(id)
-                navController.popBackStack()
-            }
+    }
+}
+
+@Composable
+fun DeleteAction(
+    onDeleteClicked: () -> Unit
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Filled.MoreVert,
+                contentDescription = stringResource(R.string.lainnya),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(text = stringResource(id = R.string.hapus))
+                },
+                onClick = {
+                    expanded = false
+                    onDeleteClicked()
+                }
+            )
         }
     }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -358,33 +397,6 @@ fun DatePickerDocked(
 fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return formatter.format(Date(millis))
-}
-
-@Composable
-fun DeleteAction(delete: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    IconButton(onClick = { expanded = true }) {
-        Icon(
-            imageVector = Icons.Filled.MoreVert,
-            contentDescription = stringResource(R.string.lainnya),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            DropdownMenuItem(
-                text = {
-                    Text(text = stringResource(id = R.string.hapus))
-                },
-                onClick = {
-                    expanded = false
-                    delete()
-                }
-            )
-        }
-    }
 }
 
 @Preview(showBackground = true)

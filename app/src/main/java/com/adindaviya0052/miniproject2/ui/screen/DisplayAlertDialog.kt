@@ -12,24 +12,28 @@ import com.adindaviya0052.miniproject2.ui.theme.MiniProject2Theme
 
 @Composable
 fun DisplayAlertDialog(
+    showDialog: Boolean,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ) {
-    AlertDialog(
-        text = { Text(text = stringResource(R.string.pesan_hapus)) },
-        confirmButton = {
-            TextButton(onClick = { onConfirmation() }) {
-                Text(text = stringResource(R.string.tombol_hapus))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = { onDismissRequest() }) {
-                Text(text = stringResource(R.string.tombol_batal))
-            }
-        },
-        onDismissRequest = { onDismissRequest() }
-    )
+    if (showDialog) {
+        AlertDialog(
+            text = { Text(text = stringResource(R.string.pesan_hapus)) },
+            confirmButton = {
+                TextButton(onClick = { onConfirmation() }) {
+                    Text(text = stringResource(R.string.tombol_hapus))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDismissRequest() }) {
+                    Text(text = stringResource(R.string.tombol_batal))
+                }
+            },
+            onDismissRequest = { onDismissRequest() }
+        )
+    }
 }
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
@@ -37,6 +41,7 @@ fun DisplayAlertDialog(
 fun DialogPreview(){
     MiniProject2Theme {
         DisplayAlertDialog(
+            showDialog = true,
             onDismissRequest = {},
             onConfirmation = {}
         )
